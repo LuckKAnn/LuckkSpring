@@ -23,9 +23,18 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
             return singleton;
         }
         BeanDefinition beanDefinition = getBeanDefinition(name);
-        return createBean(name, beanDefinition);
+        return createBean(name, beanDefinition, null);
     }
 
+    @Override
+    public Object getBean(String name, Object... args) {
+        Object singleton = getSingleton(name);
+        if (null != singleton) {
+            return singleton;
+        }
+        BeanDefinition beanDefinition = getBeanDefinition(name);
+        return createBean(name, beanDefinition, args);
+    }
 
     /**
      * 这个创建bean为什么不放到BeanFactory的接口里面去呢
@@ -34,7 +43,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param beanDefinition
      * @return
      */
-    public abstract Object createBean(String beanName, BeanDefinition beanDefinition);
+    public abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args);
 
 
 }
