@@ -1,9 +1,10 @@
 package com.luckk.lizzie;
 
-import com.luckk.lizzie.bean.BeanDefinition;
-import com.luckk.lizzie.bean.BeanType;
 import com.luckk.lizzie.bean.UserService;
 import com.luckk.lizzie.factory.BeanFactory;
+import com.luckk.lizzie.factory.factory.BeanDefinition;
+import com.luckk.lizzie.factory.supports.DefaultListableBeanFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
@@ -13,25 +14,27 @@ import org.junit.Test;
  * @ClassName: ApiTest
  * @Version 1.0
  */
+@Slf4j
 public class ApiTest {
+
     @Test
-    public void testBeanFactory(){
-        BeanFactory beanFactory = new BeanFactory();
+    public void test() {
+        DefaultListableBeanFactory defaultListableBeanFactory = new DefaultListableBeanFactory();
 
         BeanDefinition beanDefinition = new BeanDefinition();
-        beanDefinition.setBeanType(BeanType.SCOPE_SINGLETON);
+        beanDefinition.setBeanClass(UserService.class);
 
-        UserService userService = new UserService();
-        beanDefinition.setBean(userService);
+        defaultListableBeanFactory.registerBeanDefinition("userService", beanDefinition);
 
+        UserService userService = (UserService) defaultListableBeanFactory.getBean("userService");
 
-        beanFactory.registerBeanDefinition("userService", beanDefinition);
+        userService.queryUserInfo();
+        // 4.第二次获取 bean from Singleton
+        UserService userService_singleton = (UserService) defaultListableBeanFactory.getBean("userService");
+        userService_singleton.queryUserInfo();
 
-
-        UserService userServiceBean = (UserService) beanFactory.getBean("userService");
-
-        userServiceBean.queryUserInfo();
-
-
+        // get the same object
+        log.info(userService.toString());
+        log.info(userService_singleton.toString());
     }
 }

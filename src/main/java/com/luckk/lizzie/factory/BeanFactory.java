@@ -1,6 +1,5 @@
 package com.luckk.lizzie.factory;
 
-import com.luckk.lizzie.bean.BeanDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,26 +11,7 @@ import java.util.Map;
  * @ClassName: BeanFactory
  * @Version 1.0
  */
-public class BeanFactory {
+public interface BeanFactory {
 
-    private Map<String, BeanDefinition> beanDefinitionMap;
-
-
-    public BeanFactory() {
-        beanDefinitionMap = new HashMap<>();
-    }
-
-    public Object getBean(String beanName) {
-
-        BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-        if (null == beanDefinition || null == beanDefinition.getBean()) {
-            return null;
-        }
-        return beanDefinition.getBean();
-    }
-
-
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        beanDefinitionMap.put(beanName, beanDefinition);
-    }
+    public Object getBean(String name);
 }
