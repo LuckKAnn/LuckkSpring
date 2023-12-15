@@ -1,6 +1,6 @@
-package com.luckk.lizzie.factory.supports;
+package com.luckk.lizzie.beans.factory.supports;
 
-import com.luckk.lizzie.factory.factory.BeanDefinition;
+import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 

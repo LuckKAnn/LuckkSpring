@@ -1,6 +1,6 @@
-package com.luckk.lizzie.factory.supports;
+package com.luckk.lizzie.beans.factory.supports;
 
-import com.luckk.lizzie.factory.factory.SingletonBeanRegistry;
+import com.luckk.lizzie.beans.factory.factory.SingletonBeanRegistry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

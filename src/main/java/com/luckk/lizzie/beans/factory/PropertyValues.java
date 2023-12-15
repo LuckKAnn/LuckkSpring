@@ -1,4 +1,4 @@
-package com.luckk.lizzie.factory;
+package com.luckk.lizzie.beans.factory;
 
 import java.util.ArrayList;
 import java.util.List;

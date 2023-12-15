@@ -1,12 +1,12 @@
-package com.luckk.lizzie.factory.io;
+package com.luckk.lizzie.core.io;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.XmlUtil;
-import com.luckk.lizzie.factory.PropertyValue;
-import com.luckk.lizzie.factory.PropertyValues;
-import com.luckk.lizzie.factory.factory.BeanDefinition;
-import com.luckk.lizzie.factory.factory.BeanReference;
-import com.luckk.lizzie.factory.supports.DefaultListableBeanFactory;
+import com.luckk.lizzie.beans.factory.PropertyValue;
+import com.luckk.lizzie.beans.factory.PropertyValues;
+import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
+import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
+import com.luckk.lizzie.beans.factory.factory.BeanReference;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

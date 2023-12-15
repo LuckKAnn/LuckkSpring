@@ -1,13 +1,7 @@
-package com.luckk.lizzie.factory.io;
+package com.luckk.lizzie.core.io;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.XmlUtil;
-import com.luckk.lizzie.factory.PropertyValue;
-import com.luckk.lizzie.factory.factory.BeanReference;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.util.List;
 
 /**
  * @Author liukun.inspire

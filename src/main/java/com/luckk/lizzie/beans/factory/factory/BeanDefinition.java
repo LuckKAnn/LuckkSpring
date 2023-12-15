@@ -1,6 +1,6 @@
-package com.luckk.lizzie.factory.factory;
+package com.luckk.lizzie.beans.factory.factory;
 
-import com.luckk.lizzie.factory.PropertyValues;
+import com.luckk.lizzie.beans.factory.PropertyValues;
 
 /**
  * a bean definition do not store the real bean?

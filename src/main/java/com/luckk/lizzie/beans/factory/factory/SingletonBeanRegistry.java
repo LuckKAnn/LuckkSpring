@@ -1,4 +1,4 @@
-package com.luckk.lizzie.factory.factory;
+package com.luckk.lizzie.beans.factory.factory;
 
 /**
  * @Author liukun.inspire

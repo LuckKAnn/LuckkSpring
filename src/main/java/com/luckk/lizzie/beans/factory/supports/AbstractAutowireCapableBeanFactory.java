@@ -1,18 +1,15 @@
-package com.luckk.lizzie.factory.supports;
+package com.luckk.lizzie.beans.factory.supports;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.luckk.lizzie.factory.BeansException;
-import com.luckk.lizzie.factory.PropertyValue;
-import com.luckk.lizzie.factory.PropertyValues;
-import com.luckk.lizzie.factory.factory.BeanDefinition;
-import com.luckk.lizzie.factory.factory.BeanReference;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
+import com.luckk.lizzie.beans.factory.BeansException;
+import com.luckk.lizzie.beans.factory.PropertyValue;
+import com.luckk.lizzie.beans.factory.PropertyValues;
+import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
+import com.luckk.lizzie.beans.factory.factory.BeanReference;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**

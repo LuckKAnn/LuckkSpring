@@ -1,9 +1,7 @@
-package com.luckk.lizzie.factory.supports;
+package com.luckk.lizzie.beans.factory.supports;
 
-import com.luckk.lizzie.factory.BeanFactory;
-import com.luckk.lizzie.factory.factory.BeanDefinition;
-
-import java.util.Map;
+import com.luckk.lizzie.beans.factory.BeanFactory;
+import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 
 /**
  * 通过继承获得单例bean的注册能力
