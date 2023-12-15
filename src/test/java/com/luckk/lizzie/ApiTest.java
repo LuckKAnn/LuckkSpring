@@ -1,9 +1,15 @@
 package com.luckk.lizzie;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.luckk.lizzie.bean.OrderDao;
 import com.luckk.lizzie.bean.UserService;
 import com.luckk.lizzie.bean.UserService02;
+import com.luckk.lizzie.bean.UserService03;
 import com.luckk.lizzie.factory.BeanFactory;
+import com.luckk.lizzie.factory.PropertyValue;
+import com.luckk.lizzie.factory.PropertyValues;
 import com.luckk.lizzie.factory.factory.BeanDefinition;
+import com.luckk.lizzie.factory.factory.BeanReference;
 import com.luckk.lizzie.factory.supports.DefaultListableBeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -66,14 +72,44 @@ public class ApiTest {
         BeanDefinition beanDefinition = new BeanDefinition();
         beanDefinition.setBeanClass(UserService02.class);
         defaultListableBeanFactory.registerBeanDefinition("userService", beanDefinition);
-        UserService02 userService = (UserService02) defaultListableBeanFactory.getBean("userService","JJJ");
+        UserService02 userService = (UserService02) defaultListableBeanFactory.getBean("userService", "JJJ");
         userService.doSaveHello();
         // 4.第二次获取 bean from Singleton
-        UserService02 userService_singleton = (UserService02) defaultListableBeanFactory.getBean("userService","LLLL");
+        UserService02 userService_singleton = (UserService02) defaultListableBeanFactory.getBean("userService", "LLLL");
         userService_singleton.doSaveHello();
 
         // get the same object
         log.info(userService.toString());
         log.info(userService_singleton.toString());
+    }
+
+    @Test
+    public void testGetBeanWithPvSet() {
+        DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+        // init userBean
+        BeanDefinition userBeanDefinition = new BeanDefinition();
+        userBeanDefinition.setBeanClass(UserService03.class);
+
+        PropertyValues propertyValues = new PropertyValues();
+        userBeanDefinition.setPropertyValues(propertyValues);
+
+        PropertyValue nameValue = new PropertyValue();
+        nameValue.setPropertyName("name");
+        nameValue.setPropertyValue("LuckkKun-Test");
+
+        PropertyValue orderValue = new PropertyValue();
+        orderValue.setPropertyName("orderDao");
+        orderValue.setPropertyValue(new BeanReference("orderDao"));
+        propertyValues.setPropertyValues(CollectionUtil.newArrayList(nameValue, orderValue));
+
+
+        // init OrderBean
+        BeanDefinition orderBd = new BeanDefinition();
+        orderBd.setBeanClass(OrderDao.class);
+        factory.registerBeanDefinition("userService", userBeanDefinition);
+        factory.registerBeanDefinition("orderDao", orderBd);
+
+        UserService03 userService = (UserService03) factory.getBean("userService");
+        userService.findMyOrder();
     }
 }

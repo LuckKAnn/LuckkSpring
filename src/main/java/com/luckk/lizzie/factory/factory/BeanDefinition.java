@@ -1,5 +1,7 @@
 package com.luckk.lizzie.factory.factory;
 
+import com.luckk.lizzie.factory.PropertyValues;
+
 /**
  * a bean definition do not store the real bean?
  *
@@ -15,6 +17,21 @@ public class BeanDefinition {
 
     private Class beanClass;
 
+    private PropertyValues propertyValues;
+
+    public BeanDefinition() {
+    }
+
+    public BeanDefinition(Class beanClass, PropertyValues propertyValues) {
+        this.beanClass = beanClass;
+        this.propertyValues = propertyValues;
+    }
+
+    public BeanDefinition(String beanType, Class beanClass, PropertyValues propertyValues) {
+        this.beanType = beanType;
+        this.beanClass = beanClass;
+        this.propertyValues = propertyValues;
+    }
 
     public String getBeanType() {
         return beanType;
@@ -30,5 +47,13 @@ public class BeanDefinition {
 
     public void setBeanClass(Class beanClass) {
         this.beanClass = beanClass;
+    }
+
+    public PropertyValues getPropertyValues() {
+        return propertyValues;
+    }
+
+    public void setPropertyValues(PropertyValues propertyValues) {
+        this.propertyValues = propertyValues;
     }
 }
