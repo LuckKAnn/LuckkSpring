@@ -9,10 +9,7 @@ package com.luckk.lizzie.core.io;
  * @ClassName: ResourceLoader
  * @Version 1.0
  */
-public interface ResourceLoader  {
+public interface ResourceLoader {
 
-
-
-
-    Resource loadResource();
+    Resource loadResource(String location);
 }

@@ -1,8 +1,11 @@
 package com.luckk.lizzie.beans.factory.supports;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,5 +38,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             throw new BeansException("No bean named '" + beanName + "' is defined");
         }
         return beanDefinition;
+    }
+
+    @Override
+    public List<String> getBeanDefinitionNames() {
+        return CollectionUtil.newArrayList(beanDefinitionMap.keySet());
     }
 }

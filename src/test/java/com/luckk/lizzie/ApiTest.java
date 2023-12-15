@@ -9,9 +9,10 @@ import com.luckk.lizzie.beans.factory.PropertyValue;
 import com.luckk.lizzie.beans.factory.PropertyValues;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
-import com.luckk.lizzie.core.io.BeanDefinitionLoader;
-import com.luckk.lizzie.core.io.ClasspathXmlResourceLoader;
 import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
+import com.luckk.lizzie.beans.factory.supports.XmlBeanDefinitionReader;
+import com.luckk.lizzie.core.io.DefaultResourceLoader;
+import com.luckk.lizzie.core.io.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -118,10 +119,11 @@ public class ApiTest {
     @Test
     public void testLoadSpringXml() throws ClassNotFoundException {
         DefaultListableBeanFactory defaultListableBeanFactory = new DefaultListableBeanFactory();
-        ClasspathXmlResourceLoader classpathXmlResourceLoader = new ClasspathXmlResourceLoader("classpath:spring.xml");
-        BeanDefinitionLoader beanDefinitionLoader = new BeanDefinitionLoader(classpathXmlResourceLoader, defaultListableBeanFactory);
 
-        beanDefinitionLoader.loadBeanDefinition();
+        DefaultResourceLoader defaultResourceLoader = new DefaultResourceLoader();
+        Resource resource = defaultResourceLoader.loadResource("classpath:spring.xml");
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(defaultListableBeanFactory, defaultResourceLoader);
+        xmlBeanDefinitionReader.loadBeanDefinition(resource);
 
         UserService03 userService = (UserService03) defaultListableBeanFactory.getBean("userService");
         userService.findMyOrder();
