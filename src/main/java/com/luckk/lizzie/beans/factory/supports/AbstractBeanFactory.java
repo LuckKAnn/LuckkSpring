@@ -16,22 +16,26 @@ import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
     @Override
     public Object getBean(String name) {
-        Object singleton = getSingleton(name);
-        if (null != singleton) {
-            return singleton;
-        }
-        BeanDefinition beanDefinition = getBeanDefinition(name);
-        return createBean(name, beanDefinition, null);
+        return doGetBean(name, null);
     }
 
     @Override
     public Object getBean(String name, Object... args) {
+        return doGetBean(name, args);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredBeanType) {
+        return null;
+    }
+
+    protected <T> T doGetBean(String name, Object... args) {
         Object singleton = getSingleton(name);
         if (null != singleton) {
-            return singleton;
+            return (T) singleton;
         }
         BeanDefinition beanDefinition = getBeanDefinition(name);
-        return createBean(name, beanDefinition, args);
+        return (T) createBean(name, beanDefinition, args);
     }
 
     /**
@@ -42,6 +46,5 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @return
      */
     public abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args);
-
 
 }

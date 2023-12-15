@@ -14,7 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
-    private final Map<String, Object> singletonObjects;
+    /**
+     * 单例池
+     */
+    private final Map<String/*beanName*/, Object/*bean Object*/> singletonObjects;
 
     public DefaultSingletonBeanRegistry() {
         singletonObjects = new ConcurrentHashMap<>();

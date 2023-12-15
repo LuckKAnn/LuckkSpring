@@ -1,5 +1,7 @@
 package com.luckk.lizzie.core.io;
 
+import cn.hutool.core.util.ClassUtil;
+
 import java.io.InputStream;
 
 /**
@@ -18,11 +20,12 @@ import java.io.InputStream;
  */
 public class ClasspathResource implements Resource {
 
-    private String path;
-    private ClassLoader classLoader = this.getClass().getClassLoader();
+    private final String path;
+    private final ClassLoader classLoader;
 
     public ClasspathResource(String path) {
         this.path = path;
+        this.classLoader = ClassUtil.getClassLoader();
     }
 
     @Override
