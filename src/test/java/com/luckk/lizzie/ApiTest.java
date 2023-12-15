@@ -10,6 +10,8 @@ import com.luckk.lizzie.factory.PropertyValue;
 import com.luckk.lizzie.factory.PropertyValues;
 import com.luckk.lizzie.factory.factory.BeanDefinition;
 import com.luckk.lizzie.factory.factory.BeanReference;
+import com.luckk.lizzie.factory.io.BeanDefinitionLoader;
+import com.luckk.lizzie.factory.io.ClasspathXmlResourceLoader;
 import com.luckk.lizzie.factory.supports.DefaultListableBeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -110,6 +112,19 @@ public class ApiTest {
         factory.registerBeanDefinition("orderDao", orderBd);
 
         UserService03 userService = (UserService03) factory.getBean("userService");
+        userService.findMyOrder();
+    }
+
+
+    @Test
+    public void testLoadSpringXml() throws ClassNotFoundException {
+        DefaultListableBeanFactory defaultListableBeanFactory = new DefaultListableBeanFactory();
+        ClasspathXmlResourceLoader classpathXmlResourceLoader = new ClasspathXmlResourceLoader("classpath:spring.xml");
+        BeanDefinitionLoader beanDefinitionLoader = new BeanDefinitionLoader(classpathXmlResourceLoader, defaultListableBeanFactory);
+
+        beanDefinitionLoader.loadBeanDefinition();
+
+        UserService03 userService = (UserService03) defaultListableBeanFactory.getBean("userService");
         userService.findMyOrder();
     }
 }

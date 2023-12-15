@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="orderDao" class="com.luckk.lizzie.bean.OrderDao"/>
+
+    <bean id="userService" class="com.luckk.lizzie.bean.UserService03">
+        <property name="name" value="Luckkun - XmlName"/>
+        <property name="orderDao" ref="orderDao"/>
+    </bean>
+
+</beans>

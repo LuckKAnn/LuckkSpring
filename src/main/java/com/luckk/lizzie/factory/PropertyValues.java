@@ -1,5 +1,6 @@
 package com.luckk.lizzie.factory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,11 @@ import java.util.List;
  */
 public class PropertyValues {
 
-    private List<PropertyValue> propertyValues;
+    private  List<PropertyValue> propertyValues;
+
+    public PropertyValues() {
+        propertyValues = new ArrayList<>();
+    }
 
     public List<PropertyValue> getPropertyValues() {
         return propertyValues;
