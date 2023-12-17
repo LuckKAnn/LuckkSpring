@@ -2,6 +2,12 @@ package com.luckk.lizzie.beans.factory.supports;
 
 import com.luckk.lizzie.beans.factory.BeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
+import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
+import com.luckk.lizzie.beans.factory.factory.ConfigurableBeanFactory;
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 通过继承获得单例bean的注册能力
@@ -13,7 +19,11 @@ import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
  * @ClassName: AbstractBeanFactory
  * @Version 1.0
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+
+
+    private List<BeanPostProcessor> beanPostProcessorChain = new ArrayList<>();
+
     @Override
     public Object getBean(String name) {
         return doGetBean(name, null);
@@ -47,4 +57,12 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      */
     public abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args);
 
+    public List<BeanPostProcessor> getBeanPostProcessorChain() {
+        return beanPostProcessorChain;
+    }
+
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessorChain.add(beanPostProcessor);
+    }
 }

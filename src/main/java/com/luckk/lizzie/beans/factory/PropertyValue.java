@@ -9,14 +9,17 @@ package com.luckk.lizzie.beans.factory;
  */
 public class PropertyValue {
 
-    private String propertyName;
+     public String propertyName;
 
-    private Object propertyValue;
+     public Object propertyValue;
 
     public String getPropertyName() {
         return propertyName;
     }
 
+    /**
+     * @param propertyName to set
+     */
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
     }
@@ -25,6 +28,9 @@ public class PropertyValue {
         return propertyValue;
     }
 
+    /**
+     * @param propertyValue to set
+     */
     public void setPropertyValue(Object propertyValue) {
         this.propertyValue = propertyValue;
     }

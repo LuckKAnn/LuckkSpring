@@ -1,6 +1,8 @@
 package com.luckk.lizzie.beans.factory;
 
 
+import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,5 +21,6 @@ public interface BeanFactory {
     Object getBean(String name, Object... args);
 
     <T> T getBean(String name, Class<T> requiredBeanType);
+
 
 }

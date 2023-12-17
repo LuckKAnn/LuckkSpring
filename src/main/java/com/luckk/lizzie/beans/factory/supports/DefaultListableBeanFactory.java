@@ -1,11 +1,11 @@
 package com.luckk.lizzie.beans.factory.supports;
 
-import cn.hutool.core.collection.CollectionUtil;
+import com.google.common.collect.Maps;
 import com.luckk.lizzie.beans.factory.BeansException;
+import com.luckk.lizzie.beans.factory.ConfigurableListableBeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @ClassName: DefaultListableBeanFactoryt
  * @Version 1.0
  */
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
 
     private Map<String, BeanDefinition> beanDefinitionMap;
 
@@ -41,8 +41,25 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     @Override
-    public List<String> getBeanDefinitionNames() {
-        return CollectionUtil.newArrayList(beanDefinitionMap.keySet());
+    public void preInstantiateSingletons() throws BeansException {
+        beanDefinitionMap.keySet().forEach(this::getBean);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansByType(Class<T> beanType) {
+
+        HashMap<String, T> resultMap = Maps.newHashMap();
+        for (Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
+            if (beanType.isAssignableFrom(entry.getValue().getBeanClass())) {
+                resultMap.put(entry.getKey(), getBean(entry.getKey(), beanType));
+            }
+        }
+        return resultMap;
+    }
+
+    @Override
+    public String[] getBeanDefinitionNames() {
+        return beanDefinitionMap.keySet().toArray(new String[0]);
     }
 
 

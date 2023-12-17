@@ -5,7 +5,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.beans.factory.PropertyValue;
 import com.luckk.lizzie.beans.factory.PropertyValues;
+import com.luckk.lizzie.beans.factory.factory.AutowireCapableBeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
+import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +24,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     InstantiationStrategy instantiationStrategy;
 
@@ -46,12 +48,31 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             o = createBeanInstance(beanName, beanDefinition, args);
             // set pv
             applyPropertyValue(beanName, o, beanDefinition);
+
+            o = initializeBean(beanName, o, beanDefinition);
         } catch (Exception e) {
             log.error("create bean instance by beanDefinition fail", e);
             throw new BeansException();
         }
         addSingleton(beanName, o);
         return o;
+    }
+
+    private Object initializeBean(String beanName, Object o, BeanDefinition beanDefinition) {
+        // 这一步其实是执行初始化的步骤啊
+        Object wrapperBean = applyBeanPostProcessorBeforeInitialization(o, beanName);
+
+        // 执行初始化的方法和内容
+        // 可能包括InitializingBean 的方法和@PostConstruct之类的方法
+        invokeInitMethods(beanName, wrapperBean, beanDefinition);
+
+        wrapperBean = applyBeanPostProcessorAfterInitialization(o, beanName);
+        return wrapperBean;
+    }
+
+    private void invokeInitMethods(String beanName, Object wrapperBean, BeanDefinition beanDefinition) {
+
+
     }
 
     protected Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {
@@ -106,5 +127,38 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
         this.instantiationStrategy = instantiationStrategy;
+    }
+
+
+    @Override
+    public Object applyBeanPostProcessorBeforeInitialization(Object bean, String beanName) {
+        if (CollectionUtil.isEmpty(getBeanPostProcessorChain())) {
+            return bean;
+        }
+        Object result = bean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessorChain()) {
+            Object processedBean = beanPostProcessor.postProcessBeforeInitialization(bean, beanName);
+            if (processedBean == null) {
+                return result;
+            }
+            result = processedBean;
+        }
+        return result;
+    }
+
+    @Override
+    public Object applyBeanPostProcessorAfterInitialization(Object bean, String beanName) {
+        if (CollectionUtil.isEmpty(getBeanPostProcessorChain())) {
+            return bean;
+        }
+        Object result = bean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessorChain()) {
+            Object processedBean = beanPostProcessor.postProcessAfterInitialization(bean, beanName);
+            if (processedBean == null) {
+                return result;
+            }
+            result = processedBean;
+        }
+        return result;
     }
 }

@@ -23,4 +23,6 @@ public interface BeanDefinitionReader {
 
     void loadBeanDefinitions(String location);
 
+    void loadBeanDefinitions(String... location);
+
 }

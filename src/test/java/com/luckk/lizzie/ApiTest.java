@@ -80,7 +80,9 @@ public class ApiTest {
         UserService02 userService_singleton = (UserService02) defaultListableBeanFactory.getBean("userService", "LLLL");
         userService_singleton.doSaveHello();
 
+
         // get the same object
+
         log.info(userService.toString());
         log.info(userService_singleton.toString());
     }
