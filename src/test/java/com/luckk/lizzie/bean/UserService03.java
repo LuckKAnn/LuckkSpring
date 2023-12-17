@@ -29,4 +29,11 @@ public class UserService03 {
         long orderId = RandomUtil.getRandom().nextLong();
         orderDao.findOrderById(orderId);
     }
+
+    /**
+     * @param name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -8,6 +8,7 @@ import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
 import java.util.List;
 
 /**
+ * 抽象可刷新的应用上下文
  * @Author liukun.inspire
  * @Date 2023/12/15 18:36
  * @PackageName: com.luckk.lizzie.context.support

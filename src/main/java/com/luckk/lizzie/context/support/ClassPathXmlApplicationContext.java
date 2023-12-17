@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * 专门针对类路径下XML加载的应用上下文
+ *
  * @Author liukun.inspire
  * @Date 2023/12/15 18:01
  * @PackageName: com.luckk.lizzie.context.support
@@ -24,22 +25,22 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 
     @Override
     public Object getBean(String name) {
-        return null;
+        return getBeanFactory().getBean(name);
     }
 
     @Override
     public Object getBean(String name, Object... args) {
-        return null;
+        return getBeanFactory().getBean(name, args);
     }
 
     @Override
     public <T> T getBean(String name, Class<T> requiredBeanType) {
-        return null;
+        return getBeanFactory().getBean(name, requiredBeanType);
     }
 
     @Override
     public <T> Map<String, T> getBeansByType(Class<T> beanType) {
-        return null;
+        return getBeanFactory().getBeansByType(beanType);
     }
 
     @Override

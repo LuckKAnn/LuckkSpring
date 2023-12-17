@@ -11,5 +11,5 @@ import com.luckk.lizzie.beans.factory.ConfigurableListableBeanFactory;
  */
 public interface BeanFactoryPostProcessor {
 
-    void postProcessBeanFacotry(ConfigurableListableBeanFactory configurableBeanFactory);
+    void postProcessBeanFactory(ConfigurableListableBeanFactory configurableBeanFactory);
 }
