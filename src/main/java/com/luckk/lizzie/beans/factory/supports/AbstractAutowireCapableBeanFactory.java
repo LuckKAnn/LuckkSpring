@@ -3,6 +3,8 @@ package com.luckk.lizzie.beans.factory.supports;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.luckk.lizzie.beans.factory.BeansException;
+import com.luckk.lizzie.beans.factory.DisposableBean;
+import com.luckk.lizzie.beans.factory.InitializingBean;
 import com.luckk.lizzie.beans.factory.PropertyValue;
 import com.luckk.lizzie.beans.factory.PropertyValues;
 import com.luckk.lizzie.beans.factory.factory.AutowireCapableBeanFactory;
@@ -10,8 +12,11 @@ import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -26,7 +31,7 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
-    InstantiationStrategy instantiationStrategy;
+    private InstantiationStrategy instantiationStrategy;
 
     public AbstractAutowireCapableBeanFactory() {
         this.instantiationStrategy = new CglibSubclassingInstantiationStrategy();
@@ -71,8 +76,25 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     private void invokeInitMethods(String beanName, Object wrapperBean, BeanDefinition beanDefinition) {
-
-
+        // 执行接口方法
+        if (wrapperBean instanceof InitializingBean) {
+            ((InitializingBean) wrapperBean).afterPropertiesSet();
+        }
+        if (StringUtils.isNotEmpty(beanDefinition.getInitMethod())) {
+            // 反射调用initMethod
+            Class<?> clazz = beanDefinition.getBeanClass();
+            try {
+                Method declaredMethod = clazz.getDeclaredMethod(beanDefinition.getInitMethod(), (Class<?>[]) null);
+                declaredMethod.invoke(wrapperBean, (Object[]) null);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                log.error("can not find init method for bean :{}", beanName);
+                throw new BeansException();
+            }
+        }
+        // 如果有必要，添加注册Disposable
+        if (StringUtils.isNotEmpty(beanDefinition.getDestroyMethod()) || wrapperBean instanceof DisposableBean){
+            addDisposableBean(wrapperBean,beanDefinition);
+        }
     }
 
     protected Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {

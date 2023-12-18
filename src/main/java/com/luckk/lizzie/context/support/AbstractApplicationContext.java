@@ -4,8 +4,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.luckk.lizzie.beans.factory.ConfigurableListableBeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanFactoryPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
+import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
 import com.luckk.lizzie.context.ConfigurableApplicationContext;
 import com.luckk.lizzie.core.io.DefaultResourceLoader;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,8 +21,8 @@ import java.util.Map;
  * @ClassName: AbstractApplicationContext
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
-
 
     /**
      * 为什么要这么抽象呢？
@@ -36,18 +38,21 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         // beanFacotryPostprocessor 在refresh的时候就被加载成为了bd
         // 优先通过getBean的方式来加载bfp
         invokeBeanFactoryPostProcessor(beanFactory);
-
-        // 对于某个容器的实例化？
-        // 仓库注册地址
-        // 实例化的容器
-        // BeanFactoryPostProcessor什么时候注册到容器的呢
-        // 为什么还需要手动去注册呢
         // 创建bp的方式同bfp，只是需要把bfp注册到列表当中去，方便后续其他bean生命周期调用
         registerBeanPostProcessor(beanFactory);
-
         // 初始化所有的单例非懒加载的bean
         // 当前的逻辑看起来就是完全getBean创建、初始化
         beanFactory.preInstantiateSingletons();
+    }
+
+    @Override
+    public void close() {
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) getBeanFactory();
+        try {
+            beanFactory.destroySingleton();
+        } catch (Exception e) {
+            log.error("ApplicationContext destroy bean when close failed", e);
+        }
     }
 
     private void registerBeanPostProcessor(ConfigurableListableBeanFactory beanFactory) {
@@ -69,7 +74,37 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
 
+    /**
+     * 刷新容器
+     * 当前完成: 创建BF、重新加载BD
+     */
     abstract protected void refreshBeanFactory();
 
     abstract protected ConfigurableListableBeanFactory getBeanFactory();
+
+
+    @Override
+    public Object getBean(String name) {
+        return getBeanFactory().getBean(name);
+    }
+
+    @Override
+    public Object getBean(String name, Object... args) {
+        return getBeanFactory().getBean(name, args);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredBeanType) {
+        return getBeanFactory().getBean(name, requiredBeanType);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansByType(Class<T> beanType) {
+        return getBeanFactory().getBeansByType(beanType);
+    }
+
+    @Override
+    public String[] getBeanDefinitionNames() {
+        return new String[0];
+    }
 }

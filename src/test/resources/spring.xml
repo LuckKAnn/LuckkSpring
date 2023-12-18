@@ -9,6 +9,6 @@
     </bean>
 
     <bean id="helloBeanFactoryProcessor" class="com.luckk.lizzie.processor.HelloBeanFactoryProcessor"/>
-    <bean id="helloBeanProcessor" class="com.luckk.lizzie.processor.HelloBeanPostProcessor"/>
+    <bean id="helloBeanProcessor" init-method="doInitMethod" class="com.luckk.lizzie.processor.HelloBeanPostProcessor"/>
 
 </beans>

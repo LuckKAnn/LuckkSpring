@@ -20,16 +20,9 @@ public class ApplicationContextTest {
     @Test
     public void testInitApplicationContext() {
         ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring.xml"});
-        // 需要先进行刷新？
-        classPathXmlApplicationContext.refresh();
-
         Map<String, BeanPostProcessor> beansByType = classPathXmlApplicationContext.getBeansByType(BeanPostProcessor.class);
-
         System.out.println(beansByType.toString());
-
         UserService03 userService = (UserService03) classPathXmlApplicationContext.getBean("userService");
         userService.findMyOrder();
-
-
     }
 }

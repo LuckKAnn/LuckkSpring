@@ -1,7 +1,13 @@
 package com.luckk.lizzie.beans.factory.supports;
 
+import com.luckk.lizzie.beans.factory.BeansException;
+import com.luckk.lizzie.beans.factory.DisposableBean;
+import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.SingletonBeanRegistry;
+import org.checkerframework.checker.units.qual.A;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,6 +25,9 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
      */
     private final Map<String/*beanName*/, Object/*bean Object*/> singletonObjects;
 
+
+    private final List<DisposableBeanAdapter> disposableList = new ArrayList<>();
+
     public DefaultSingletonBeanRegistry() {
         singletonObjects = new ConcurrentHashMap<>();
     }
@@ -26,6 +35,13 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
     @Override
     public Object getSingleton(String beanName) {
         return singletonObjects.get(beanName);
+    }
+
+    @Override
+    public void destroySingleton() throws Exception {
+        for (DisposableBeanAdapter disposableBeanAdapter : disposableList) {
+            disposableBeanAdapter.close();
+        }
     }
 
     /**
@@ -42,4 +58,10 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
     public Map<String, Object> getSingletonObjects() {
         return singletonObjects;
     }
+
+
+    public void addDisposableBean(Object bean, BeanDefinition beanDefinition) {
+        disposableList.add(new DisposableBeanAdapter(bean, beanDefinition.getDestroyMethod()));
+    }
+
 }

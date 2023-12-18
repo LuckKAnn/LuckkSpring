@@ -21,26 +21,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 
     public ClassPathXmlApplicationContext(String[] configLocations) {
         this.configLocations = configLocations;
-    }
-
-    @Override
-    public Object getBean(String name) {
-        return getBeanFactory().getBean(name);
-    }
-
-    @Override
-    public Object getBean(String name, Object... args) {
-        return getBeanFactory().getBean(name, args);
-    }
-
-    @Override
-    public <T> T getBean(String name, Class<T> requiredBeanType) {
-        return getBeanFactory().getBean(name, requiredBeanType);
-    }
-
-    @Override
-    public <T> Map<String, T> getBeansByType(Class<T> beanType) {
-        return getBeanFactory().getBeansByType(beanType);
+        refresh();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     @Override

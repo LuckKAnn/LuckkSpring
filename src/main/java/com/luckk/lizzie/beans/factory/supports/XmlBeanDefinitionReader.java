@@ -72,8 +72,16 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         for (Element beanElement : beans) {
             String beanClazz = beanElement.getAttribute("class");
             String beanName = beanElement.getAttribute("id");
+            String initMethod = beanElement.getAttribute("init-method");
+            String destroyMethod = beanElement.getAttribute("destroy-method");
             BeanDefinition beanDefinition = new BeanDefinition();
             beanDefinition.setBeanClass(Class.forName(beanClazz));
+            if (StringUtils.isNotEmpty(initMethod)) {
+                beanDefinition.setInitMethod(initMethod);
+            }
+            if (StringUtils.isNotEmpty(destroyMethod)) {
+                beanDefinition.setDestroyMethod(destroyMethod);
+            }
             PropertyValues propertyValues = new PropertyValues();
 
             beanDefinition.setPropertyValues(propertyValues);
@@ -114,7 +122,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     @Override
     public void loadBeanDefinitions(String... locations) {
-        for (String location : locations){
+        for (String location : locations) {
             loadBeanDefinitions(location);
         }
     }
