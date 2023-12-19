@@ -22,7 +22,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
     public ClassPathXmlApplicationContext(String[] configLocations) {
         this.configLocations = configLocations;
         refresh();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+        registerShutdownHook();
     }
 
     @Override

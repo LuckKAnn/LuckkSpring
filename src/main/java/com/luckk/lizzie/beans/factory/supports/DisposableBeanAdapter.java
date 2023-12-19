@@ -19,11 +19,14 @@ public class DisposableBeanAdapter implements DisposableBean {
 
     private String destroyMethod;
 
-    public DisposableBeanAdapter(Object bean, String destroyMethod) {
+    private String beanName;
+
+
+    public DisposableBeanAdapter(Object bean, String destroyMethod, String beanName) {
         this.bean = bean;
         this.destroyMethod = destroyMethod;
+        this.beanName = beanName;
     }
-
 
     @Override
     public void close() throws Exception {

@@ -13,5 +13,4 @@ public interface SingletonBeanRegistry {
 
     Object getSingleton(String beanName);
 
-    void destroySingleton() throws Exception;
 }

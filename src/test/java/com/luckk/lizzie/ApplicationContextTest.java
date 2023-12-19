@@ -15,8 +15,6 @@ import java.util.Map;
  * @Version 1.0
  */
 public class ApplicationContextTest {
-
-
     @Test
     public void testInitApplicationContext() {
         ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring.xml"});

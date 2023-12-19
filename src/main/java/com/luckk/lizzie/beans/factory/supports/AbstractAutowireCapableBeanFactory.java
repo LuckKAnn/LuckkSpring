@@ -59,8 +59,17 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             log.error("create bean instance by beanDefinition fail", e);
             throw new BeansException();
         }
+
+        registerDisposableBeanIfNecessary(o, beanName, beanDefinition);
         addSingleton(beanName, o);
         return o;
+    }
+
+    protected void registerDisposableBeanIfNecessary(Object bean, String beanName, BeanDefinition beanDefinition) {
+        // 如果有必要，添加注册Disposable
+        if (StringUtils.isNotEmpty(beanDefinition.getDestroyMethod()) || bean instanceof DisposableBean) {
+            addDisposableBean(bean, beanName, beanDefinition);
+        }
     }
 
     private Object initializeBean(String beanName, Object o, BeanDefinition beanDefinition) {
@@ -91,10 +100,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 throw new BeansException();
             }
         }
-        // 如果有必要，添加注册Disposable
-        if (StringUtils.isNotEmpty(beanDefinition.getDestroyMethod()) || wrapperBean instanceof DisposableBean){
-            addDisposableBean(wrapperBean,beanDefinition);
-        }
+
     }
 
     protected Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {

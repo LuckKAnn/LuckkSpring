@@ -7,6 +7,10 @@ import com.sun.jndi.rmi.registry.RegistryContextFactory;
 
 /**
  * 可获取 BeanPostProcessor、BeanClassLoader的一个配置化接口。
+ * Configuration interface to be implemented by most bean factories. Provides
+ * facilities to configure a bean factory, in addition to the bean factory
+ * client methods in the {@link com.luckk.lizzie.beans.factory.BeanFactory}
+ * interface.
  *
  * @Author liukun.inspire
  * @Date 2023/12/15 16:40
@@ -14,7 +18,10 @@ import com.sun.jndi.rmi.registry.RegistryContextFactory;
  * @ClassName: ConfigurableBeanFactory
  * @Version 1.0
  */
-public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, BeanDefinitionRegistry {
+public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
+
+
+    void destroySingletons() throws Exception;
 }

@@ -7,6 +7,8 @@ import com.luckk.lizzie.beans.factory.factory.SingletonBeanRegistry;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +28,7 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
     private final Map<String/*beanName*/, Object/*bean Object*/> singletonObjects;
 
 
-    private final List<DisposableBeanAdapter> disposableList = new ArrayList<>();
+    private final Map<String, DisposableBeanAdapter> disposableBeanAdapterMap = new HashMap<>();
 
     public DefaultSingletonBeanRegistry() {
         singletonObjects = new ConcurrentHashMap<>();
@@ -37,12 +39,13 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
         return singletonObjects.get(beanName);
     }
 
-    @Override
-    public void destroySingleton() throws Exception {
-        for (DisposableBeanAdapter disposableBeanAdapter : disposableList) {
+    public void destroySingletons() throws Exception {
+        Collection<DisposableBeanAdapter> disposableBeanAdapters = disposableBeanAdapterMap.values();
+        for (DisposableBeanAdapter disposableBeanAdapter : disposableBeanAdapters) {
             disposableBeanAdapter.close();
         }
     }
+
 
     /**
      * why protected
@@ -60,8 +63,7 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
     }
 
 
-    public void addDisposableBean(Object bean, BeanDefinition beanDefinition) {
-        disposableList.add(new DisposableBeanAdapter(bean, beanDefinition.getDestroyMethod()));
+    public void addDisposableBean(Object bean, String beanName, BeanDefinition beanDefinition) {
+        disposableBeanAdapterMap.put(beanName, new DisposableBeanAdapter(bean, beanDefinition.getDestroyMethod(), beanName));
     }
-
 }

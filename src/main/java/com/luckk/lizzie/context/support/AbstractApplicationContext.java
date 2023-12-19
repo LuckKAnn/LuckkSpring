@@ -46,10 +46,15 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
     @Override
+    public void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+    }
+
+    @Override
     public void close() {
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) getBeanFactory();
         try {
-            beanFactory.destroySingleton();
+            beanFactory.destroySingletons();
         } catch (Exception e) {
             log.error("ApplicationContext destroy bean when close failed", e);
         }
