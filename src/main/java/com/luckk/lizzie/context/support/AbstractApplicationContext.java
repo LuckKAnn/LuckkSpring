@@ -6,7 +6,13 @@ import com.luckk.lizzie.beans.factory.factory.BeanFactoryPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
 import com.luckk.lizzie.context.ApplicationContext;
+import com.luckk.lizzie.context.ApplicationEvent;
+import com.luckk.lizzie.context.ApplicationListener;
 import com.luckk.lizzie.context.ConfigurableApplicationContext;
+import com.luckk.lizzie.context.event.ApplicationEventMulticaster;
+import com.luckk.lizzie.context.event.ContextClosedEvent;
+import com.luckk.lizzie.context.event.ContextRefreshedEvent;
+import com.luckk.lizzie.context.event.SimpleApplicationEventMulticaster;
 import com.luckk.lizzie.core.io.DefaultResourceLoader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +30,11 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
+
+    public static final String APPLICATION_EVENT_MULTICASTER_BEAN_NAME = "applicationEventMulticaster";
+
+
+    private ApplicationEventMulticaster eventMulticaster;
 
     /**
      * 为什么要这么抽象呢？
@@ -43,9 +54,32 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         invokeBeanFactoryPostProcessor(beanFactory);
         // 创建bp的方式同bfp，只是需要把bfp注册到列表当中去，方便后续其他bean生命周期调用
         registerBeanPostProcessor(beanFactory);
+
+        // 初始化事件广播器
+        initApplicationEventMulticaster();
+        // 注册所有的Listener
+        registerApplicationListeners(beanFactory);
+
         // 初始化所有的单例非懒加载的bean
         // 当前的逻辑看起来就是完全getBean创建、初始化
         beanFactory.preInstantiateSingletons();
+
+        // 发布容器刷新完成的事件
+        publishEvent(new ContextRefreshedEvent(this));
+    }
+
+    private void initApplicationEventMulticaster() {
+        ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+        eventMulticaster = new SimpleApplicationEventMulticaster();
+        // 注入到容器当中，是为了让其他人也能够获取到吗
+        beanFactory.registerSingleton(APPLICATION_EVENT_MULTICASTER_BEAN_NAME, eventMulticaster);
+    }
+
+    private void registerApplicationListeners(ConfigurableListableBeanFactory beanFactory) {
+        Map<String, ApplicationListener> listenerMap = beanFactory.getBeansByType(ApplicationListener.class);
+        for (ApplicationListener<?> listener : listenerMap.values()) {
+            eventMulticaster.registerListener(listener);
+        }
     }
 
     @Override
@@ -56,6 +90,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     @Override
     public void close() {
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) getBeanFactory();
+        // 如果先销毁，再发布，似乎并不能获取到信息的样子
+        publishEvent(new ContextClosedEvent(this));
         try {
             beanFactory.destroySingletons();
         } catch (Exception e) {
@@ -81,7 +117,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         }
     }
 
-
     /**
      * 刷新容器
      * 当前完成: 创建BF、重新加载BD
@@ -89,7 +124,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     abstract protected void refreshBeanFactory();
 
     abstract protected ConfigurableListableBeanFactory getBeanFactory();
-
 
     @Override
     public Object getBean(String name) {
@@ -115,4 +149,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     public String[] getBeanDefinitionNames() {
         return new String[0];
     }
+
+    @Override
+    public void publishEvent(ApplicationEvent applicationEvent) {
+        eventMulticaster.multicastEvent(applicationEvent);
+    }
+
 }

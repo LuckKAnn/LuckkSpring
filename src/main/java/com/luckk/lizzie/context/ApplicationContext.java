@@ -11,5 +11,6 @@ import com.luckk.lizzie.beans.factory.ListableBeanFactory;
  */
 
 // 继承ListableBeanFactory只是希望获取BeanFactory获取Bean的能力吗
-public interface ApplicationContext extends ListableBeanFactory {
+// ApplicationContext 还是一个事件发布器
+public interface ApplicationContext extends ListableBeanFactory, ApplicationEventPublisher {
 }

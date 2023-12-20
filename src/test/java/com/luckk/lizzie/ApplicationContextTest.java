@@ -7,6 +7,7 @@ import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.context.ApplicationContext;
 import com.luckk.lizzie.context.support.AbstractApplicationContext;
 import com.luckk.lizzie.context.support.ClassPathXmlApplicationContext;
+import com.luckk.lizzie.listener.LuckSpringEvent;
 import org.junit.Test;
 
 import java.util.Map;
@@ -58,6 +59,12 @@ public class ApplicationContextTest {
         userService = (UserService04) applicationContext.getBean("userService2");
         System.out.println(userService);
         userService.findUser();
+    }
 
+
+    @Test
+    public void testListenerAndEvent() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring-Listener.xml"});
+        applicationContext.publishEvent(new LuckSpringEvent("this is a test"));
     }
 }

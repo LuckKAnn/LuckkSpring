@@ -31,7 +31,6 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
      * 空对象的标识
      */
     protected final Object NULL_OBJECT = new Object();
-
     private final Map<String, DisposableBeanAdapter> disposableBeanAdapterMap = new HashMap<>();
 
     public DefaultSingletonBeanRegistry() {
@@ -50,6 +49,10 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
         }
     }
 
+    @Override
+    public void registerSingleton(String beanName, Object object) {
+        singletonObjects.put(beanName, object);
+    }
 
     /**
      * why protected

@@ -13,4 +13,11 @@ public interface SingletonBeanRegistry {
 
     Object getSingleton(String beanName);
 
+    /**
+     * 图纸都没有，为什么直接注册呢
+     * @param beanName
+     * @param singletonObject
+     */
+    void registerSingleton(String beanName, Object singletonObject);
+
 }

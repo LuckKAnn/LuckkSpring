@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+
+    <bean id="contextRefreshedListener" class="com.luckk.lizzie.listener.ContextRefreshedListener"/>
+    <bean id="luckSpringEventListener" class="com.luckk.lizzie.listener.LuckSpringEventListener"/>
+</beans>

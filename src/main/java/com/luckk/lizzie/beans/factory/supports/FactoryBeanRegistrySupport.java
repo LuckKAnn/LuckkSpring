@@ -16,6 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FactoryBeanRegistrySupport extends DefaultSingletonBeanRegistry {
 
+    /**
+     * FactoryBean 生成对象的缓存池
+     * 因为当业务手动获取Bean的时候，可能会造成并发的访问读写吗
+     */
     private final Map<String, Object> factoryBeanObjectCache = new ConcurrentHashMap<>();
 
     public Object getCachedObjectForFactoryBean(String beanName) {
