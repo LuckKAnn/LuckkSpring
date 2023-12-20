@@ -2,6 +2,9 @@ package com.luckk.lizzie.beans.factory.supports;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import com.luckk.lizzie.beans.factory.BeanClassLoaderAware;
+import com.luckk.lizzie.beans.factory.BeanFactoryAware;
+import com.luckk.lizzie.beans.factory.BeanNameAware;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.beans.factory.DisposableBean;
 import com.luckk.lizzie.beans.factory.InitializingBean;
@@ -85,6 +88,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     private void invokeInitMethods(String beanName, Object wrapperBean, BeanDefinition beanDefinition) {
+
+        invokeAwareMethods(beanName, wrapperBean, beanDefinition);
         // 执行接口方法
         if (wrapperBean instanceof InitializingBean) {
             ((InitializingBean) wrapperBean).afterPropertiesSet();
@@ -101,6 +106,26 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             }
         }
 
+    }
+
+    /**
+     * set aware
+     *
+     * @param beanName
+     * @param wrapperBean
+     * @param beanDefinition
+     */
+    private void invokeAwareMethods(String beanName, Object wrapperBean, BeanDefinition beanDefinition) {
+
+        if (wrapperBean instanceof BeanNameAware) {
+            ((BeanNameAware) wrapperBean).setBeanName(beanName);
+        }
+        if (wrapperBean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) wrapperBean).setBeanFactory(this);
+        }
+        if (wrapperBean instanceof BeanClassLoaderAware) {
+            ((BeanClassLoaderAware) wrapperBean).setBeanClassLoader(this.getClass().getClassLoader());
+        }
     }
 
     protected Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {

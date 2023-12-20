@@ -5,6 +5,7 @@ import com.luckk.lizzie.beans.factory.ConfigurableListableBeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanFactoryPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.supports.DefaultListableBeanFactory;
+import com.luckk.lizzie.context.ApplicationContext;
 import com.luckk.lizzie.context.ConfigurableApplicationContext;
 import com.luckk.lizzie.core.io.DefaultResourceLoader;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
         // 容器刷新，当前完成的任务是，创建容器，加载bd
         refreshBeanFactory();
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+        // 手动添加Aware 接口的赋值
+        beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
         // beanFacotryPostprocessor 在refresh的时候就被加载成为了bd
         // 优先通过getBean的方式来加载bfp
         invokeBeanFactoryPostProcessor(beanFactory);

@@ -11,4 +11,5 @@
     <bean id="helloBeanFactoryProcessor" class="com.luckk.lizzie.processor.HelloBeanFactoryProcessor"/>
     <bean id="helloBeanProcessor" init-method="doInitMethod" class="com.luckk.lizzie.processor.HelloBeanPostProcessor"/>
 
+    <bean id="redisService" class="com.luckk.lizzie.bean.RedisService"/>
 </beans>
