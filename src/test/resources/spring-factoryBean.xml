@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+
+    <bean id="userService" class="com.luckk.lizzie.bean.UserService04">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="userService2" class="com.luckk.lizzie.bean.UserService04" scope="prototype">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="userDao" class="com.luckk.lizzie.bean.ProxyBeanFactory"/>
+</beans>

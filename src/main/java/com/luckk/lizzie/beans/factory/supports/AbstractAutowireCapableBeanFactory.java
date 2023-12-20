@@ -7,6 +7,7 @@ import com.luckk.lizzie.beans.factory.BeanFactoryAware;
 import com.luckk.lizzie.beans.factory.BeanNameAware;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.beans.factory.DisposableBean;
+import com.luckk.lizzie.beans.factory.FactoryBean;
 import com.luckk.lizzie.beans.factory.InitializingBean;
 import com.luckk.lizzie.beans.factory.PropertyValue;
 import com.luckk.lizzie.beans.factory.PropertyValues;
@@ -64,7 +65,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         registerDisposableBeanIfNecessary(o, beanName, beanDefinition);
-        addSingleton(beanName, o);
+        // 只有单例类型才被假如到单例池
+        if (beanDefinition.isSingleton()) {
+            addSingleton(beanName, o);
+        }
         return o;
     }
 

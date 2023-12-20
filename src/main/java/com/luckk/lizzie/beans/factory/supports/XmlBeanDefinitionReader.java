@@ -7,6 +7,7 @@ import com.luckk.lizzie.beans.factory.PropertyValue;
 import com.luckk.lizzie.beans.factory.PropertyValues;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
+import com.luckk.lizzie.beans.factory.factory.ConfigurableBeanFactory;
 import com.luckk.lizzie.core.io.Resource;
 import com.luckk.lizzie.core.io.ResourceLoader;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             String beanName = beanElement.getAttribute("id");
             String initMethod = beanElement.getAttribute("init-method");
             String destroyMethod = beanElement.getAttribute("destroy-method");
+            String type = beanElement.getAttribute("scope");
+
             BeanDefinition beanDefinition = new BeanDefinition();
             beanDefinition.setBeanClass(Class.forName(beanClazz));
             if (StringUtils.isNotEmpty(initMethod)) {
@@ -81,6 +84,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             }
             if (StringUtils.isNotEmpty(destroyMethod)) {
                 beanDefinition.setDestroyMethod(destroyMethod);
+            }
+            if (StringUtils.isNotEmpty(type)) {
+                beanDefinition.setScope(type);
+            }
+            if (StringUtils.isEmpty(type)) {
+                beanDefinition.setScope(BeanDefinition.SINGLETON);
             }
             PropertyValues propertyValues = new PropertyValues();
 

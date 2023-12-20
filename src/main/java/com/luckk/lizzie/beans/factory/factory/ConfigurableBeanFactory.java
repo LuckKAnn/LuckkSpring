@@ -20,8 +20,14 @@ import com.sun.jndi.rmi.registry.RegistryContextFactory;
  */
 public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, SingletonBeanRegistry {
 
+
+    String PROTOTYPE = "prototype";
+
+    String SINGLETON = "singleton";
+
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
 
     void destroySingletons() throws Exception;
+
 }

@@ -2,6 +2,7 @@ package com.luckk.lizzie;
 
 import com.luckk.lizzie.bean.RedisService;
 import com.luckk.lizzie.bean.UserService03;
+import com.luckk.lizzie.bean.UserService04;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.context.ApplicationContext;
 import com.luckk.lizzie.context.support.AbstractApplicationContext;
@@ -35,9 +36,28 @@ public class ApplicationContextTest {
         System.out.println(redisService.getApplicationContext());
         System.out.println(redisService.getBeanName());
         System.out.println(redisService.getBeanFactory());
-
         redisService.queryData();
+    }
 
+    @Test
+    public void testFactoryBean() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring-factoryBean.xml"});
+        System.out.println(applicationContext);
+
+        UserService04 userService = (UserService04) applicationContext.getBean("userService");
+
+        userService.findUser();
+    }
+
+    @Test
+    public void testPrototype() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring-factoryBean.xml"});
+        UserService04 userService = (UserService04) applicationContext.getBean("userService2");
+        System.out.println(userService);
+        userService.findUser();
+        userService = (UserService04) applicationContext.getBean("userService2");
+        System.out.println(userService);
+        userService.findUser();
 
     }
 }

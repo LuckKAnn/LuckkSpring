@@ -27,6 +27,10 @@ public abstract class DefaultSingletonBeanRegistry implements SingletonBeanRegis
      */
     private final Map<String/*beanName*/, Object/*bean Object*/> singletonObjects;
 
+    /**
+     * 空对象的标识
+     */
+    protected final Object NULL_OBJECT = new Object();
 
     private final Map<String, DisposableBeanAdapter> disposableBeanAdapterMap = new HashMap<>();
 

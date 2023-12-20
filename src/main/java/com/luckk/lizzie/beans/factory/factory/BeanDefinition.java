@@ -13,7 +13,13 @@ import com.luckk.lizzie.beans.factory.PropertyValues;
  */
 public class BeanDefinition {
 
-    private String beanType;
+    public static final String SINGLETON = ConfigurableBeanFactory.SINGLETON;
+    public static final String PROTOTYPE = ConfigurableBeanFactory.PROTOTYPE;
+
+    /**
+     * 变量作用域
+     */
+    private String scope;
 
     private Class beanClass;
 
@@ -37,18 +43,28 @@ public class BeanDefinition {
         this.propertyValues = propertyValues;
     }
 
-    public BeanDefinition(String beanType, Class beanClass, PropertyValues propertyValues) {
-        this.beanType = beanType;
+    public BeanDefinition(String scope, Class beanClass, PropertyValues propertyValues) {
+        this.scope = scope;
         this.beanClass = beanClass;
         this.propertyValues = propertyValues;
     }
 
-    public String getBeanType() {
-        return beanType;
+    public boolean isSingleton() {
+        return SINGLETON.equals(scope);
+    }
+    public boolean isPrototype() {
+        return PROTOTYPE.equals(scope);
     }
 
-    public void setBeanType(String beanType) {
-        this.beanType = beanType;
+    public String getScope() {
+        return scope;
+    }
+
+    /**
+     * @param scope to set
+     */
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public Class getBeanClass() {

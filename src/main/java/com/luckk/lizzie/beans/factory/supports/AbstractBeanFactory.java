@@ -1,6 +1,7 @@
 package com.luckk.lizzie.beans.factory.supports;
 
 import com.luckk.lizzie.beans.factory.BeanFactory;
+import com.luckk.lizzie.beans.factory.FactoryBean;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.ConfigurableBeanFactory;
@@ -22,7 +23,7 @@ import java.util.List;
  * @ClassName: AbstractBeanFactory
  * @Version 1.0
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanDefinitionRegistry, ConfigurableBeanFactory {
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements BeanDefinitionRegistry, ConfigurableBeanFactory {
     private List<BeanPostProcessor> beanPostProcessorChain = new ArrayList<>();
 
     @Override
@@ -43,12 +44,26 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     protected <T> T doGetBean(String name, Object... args) {
         Object singleton = getSingleton(name);
         if (null != singleton) {
-            return (T) singleton;
+            return (T) getObjectForBeanInstance(singleton, name);
         }
         BeanDefinition beanDefinition = getBeanDefinition(name);
-        return (T) createBean(name, beanDefinition, args);
+        singleton = createBean(name, beanDefinition, args);
+        return (T) getObjectForBeanInstance(singleton, name);
     }
 
+    protected Object getObjectForBeanInstance(Object bean, String beanName) {
+        if (!(bean instanceof FactoryBean)) {
+            return bean;
+        }
+        // 如果是FactoryBean？
+        // if singleton
+        FactoryBean<?> factoryBean = (FactoryBean<?>) bean;
+        Object cachedObjectForFactoryBean = getCachedObjectForFactoryBean(beanName);
+        if (cachedObjectForFactoryBean == null) {
+            cachedObjectForFactoryBean = getObjectFromFactoryBean(factoryBean, beanName);
+        }
+        return cachedObjectForFactoryBean;
+    }
 
     /**
      * 这个创建bean为什么不放到BeanFactory的接口里面去呢
@@ -67,4 +82,6 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
         this.beanPostProcessorChain.add(beanPostProcessor);
     }
+
+
 }
