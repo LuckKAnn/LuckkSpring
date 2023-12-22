@@ -1,0 +1,57 @@
+package com.luckk.lizzie.aop;
+
+import com.luckk.lizzie.aop.aspectj.AspectJExpressionPointcut;
+import com.luckk.lizzie.aop.framework.ReflectiveMethodInvocation;
+import org.aopalliance.intercept.MethodInterceptor;
+
+/**
+ * @Author liukun.inspire
+ * @Date 2023/12/21 21:29
+ * @PackageName: com.luckk.lizzie.aop
+ * @ClassName: AdvisedSupport
+ * @Version 1.0
+ */
+public class AdvisedSupport {
+
+    private TargetSource targetSource;
+    /**
+     *
+     */
+    private MethodInterceptor methodInterceptor;
+
+    private MethodMatcher methodMatcher;
+
+
+    public TargetSource getTargetSource() {
+        return targetSource;
+    }
+
+    public MethodInterceptor getMethodInterceptor() {
+        return methodInterceptor;
+    }
+
+    public MethodMatcher getMethodMatcher() {
+        return methodMatcher;
+    }
+
+    /**
+     * @param targetSource to set
+     */
+    public void setTargetSource(TargetSource targetSource) {
+        this.targetSource = targetSource;
+    }
+
+    /**
+     * @param methodInterceptor to set
+     */
+    public void setMethodInterceptor(MethodInterceptor methodInterceptor) {
+        this.methodInterceptor = methodInterceptor;
+    }
+
+    /**
+     * @param methodMatcher to set
+     */
+    public void setMethodMatcher(MethodMatcher methodMatcher) {
+        this.methodMatcher = methodMatcher;
+    }
+}

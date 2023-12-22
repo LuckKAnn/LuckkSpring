@@ -1,16 +1,12 @@
 package com.luckk.lizzie.context.event;
 
-import com.apple.eawt.AppEventListener;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.context.ApplicationEvent;
-import com.luckk.lizzie.context.ApplicationEventPublisher;
 import com.luckk.lizzie.context.ApplicationListener;
 import com.luckk.lizzie.util.ClassUtils;
-import org.checkerframework.checker.units.qual.A;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,11 +53,11 @@ public abstract class AbstractApplicationEventMulticaster implements Application
         // 如何判断是否相同呢，理想情况下其实就是获取一个的泛型具体类
         // 另外
         Class<? extends ApplicationListener> listenerClass = listener.getClass();
-
         // 按照 CglibSubclassingInstantiationStrategy、
         // SimpleInstantiationStrategy 不同的实例化类型，需要判断后获取目标 class
 
         // JDK 通过接口，cglib通过继承
+        // TODO: read how this get the target real class
         Class<?> targetClass = ClassUtils.isCglibProxyClass(listenerClass) ? listenerClass.getSuperclass() : listenerClass;
         // 实现的接口？
         Type genericInterface = targetClass.getGenericInterfaces()[0];
