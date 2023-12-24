@@ -15,6 +15,7 @@ import com.luckk.lizzie.beans.factory.factory.AutowireCapableBeanFactory;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
+import com.luckk.lizzie.beans.factory.factory.InstantiationAwareBeanPostProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,13 +55,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         // 创建bean需要什么呢？
         Object o = null;
         try {
+            // 执行对应的处理
+            Object proxyBean = applyBeanPostProcessorBeforeInstantiation(beanName, null, beanDefinition);
+            if (proxyBean != null) {
+                return proxyBean;
+            }
             o = createBeanInstance(beanName, beanDefinition, args);
             // set pv
             applyPropertyValue(beanName, o, beanDefinition);
 
             o = initializeBean(beanName, o, beanDefinition);
         } catch (Exception e) {
-            log.error("create bean instance by beanDefinition fail", e);
+            log.error("create bean instance by beanDefinition fail, beanName:{}", beanName, e);
             throw new BeansException();
         }
 
@@ -81,6 +87,19 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         if (StringUtils.isNotEmpty(beanDefinition.getDestroyMethod()) || bean instanceof DisposableBean) {
             addDisposableBean(bean, beanName, beanDefinition);
         }
+    }
+
+    private Object applyBeanPostProcessorBeforeInstantiation(String beanName, Object o, BeanDefinition beanDefinition) {
+        if (CollectionUtil.isEmpty(getBeanPostProcessorChain())) {
+            return null;
+        }
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessorChain()) {
+            if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+                InstantiationAwareBeanPostProcessor instantiationAwareBeanPostProcessor = (InstantiationAwareBeanPostProcessor) beanPostProcessor;
+                return instantiationAwareBeanPostProcessor.postProcessBeforeInstantiation(beanDefinition.getBeanClass(), beanName);
+            }
+        }
+        return null;
     }
 
     private Object initializeBean(String beanName, Object o, BeanDefinition beanDefinition) {
@@ -165,6 +184,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 BeanReference beanReference = (BeanReference) propertyValue;
                 propertyValue = getBean(beanReference.getBeanName());
             }
+            // set the property name
             BeanUtil.setFieldValue(bean, propertyName, propertyValue);
 
             // under is a way by refelect

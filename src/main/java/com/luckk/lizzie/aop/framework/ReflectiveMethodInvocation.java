@@ -17,10 +17,10 @@ import java.lang.reflect.Method;
  */
 public class ReflectiveMethodInvocation implements MethodInvocation {
 
-    private Object target;
+    protected Object target;
 
-    private Method method;
-    private Object[] arguments;
+    protected Method method;
+    protected Object[] arguments;
 
     public ReflectiveMethodInvocation(Object target, Method method, Object[] arguments) {
         this.target = target;

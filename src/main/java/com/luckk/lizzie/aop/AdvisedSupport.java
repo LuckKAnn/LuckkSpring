@@ -1,10 +1,10 @@
 package com.luckk.lizzie.aop;
 
-import com.luckk.lizzie.aop.aspectj.AspectJExpressionPointcut;
-import com.luckk.lizzie.aop.framework.ReflectiveMethodInvocation;
 import org.aopalliance.intercept.MethodInterceptor;
 
 /**
+ * provide all aop ableity
+ *
  * @Author liukun.inspire
  * @Date 2023/12/21 21:29
  * @PackageName: com.luckk.lizzie.aop
@@ -21,6 +21,11 @@ public class AdvisedSupport {
 
     private MethodMatcher methodMatcher;
 
+    private boolean proxyTargetClass;
+
+    public AdvisedSupport(boolean proxyTargetClass) {
+        this.proxyTargetClass = proxyTargetClass;
+    }
 
     public TargetSource getTargetSource() {
         return targetSource;
@@ -53,5 +58,9 @@ public class AdvisedSupport {
      */
     public void setMethodMatcher(MethodMatcher methodMatcher) {
         this.methodMatcher = methodMatcher;
+    }
+
+    public boolean isProxyTargetClass() {
+        return proxyTargetClass;
     }
 }

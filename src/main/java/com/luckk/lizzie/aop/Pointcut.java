@@ -15,7 +15,6 @@ public interface Pointcut {
      * @return 类过滤器
      */
     ClassFilter getClassFilter();
-
     /**
      * 获取方法匹配
      * @return 方法匹配器
