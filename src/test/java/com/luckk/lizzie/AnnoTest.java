@@ -35,4 +35,12 @@ public class AnnoTest {
         TransferService transferServiceImpl = applicationContext.getBean("transferService", TransferService.class);
         transferServiceImpl.doTransfer("1111.", "@22222");
     }
+
+    @Test
+    public void testAutoInjection() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(new String[]{"classpath:spring-anno2.xml"});
+        Map<String, TransferServiceImpl> beansByType = applicationContext.getBeansByType(TransferServiceImpl.class);
+        TransferService transferServiceImpl = applicationContext.getBean("transferServiceImpl", TransferService.class);
+        transferServiceImpl.doTransfer("1111.", "@22222");
+    }
 }

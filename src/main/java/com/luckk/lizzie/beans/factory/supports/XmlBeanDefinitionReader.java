@@ -1,6 +1,7 @@
 package com.luckk.lizzie.beans.factory.supports;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import com.luckk.lizzie.beans.factory.BeansException;
 import com.luckk.lizzie.beans.factory.PropertyValue;
@@ -33,7 +34,6 @@ import java.util.List;
  */
 @Slf4j
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
-
 
     /**
      * 扫描路径
@@ -86,13 +86,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
         for (Element beanElement : beans) {
             String beanClazz = beanElement.getAttribute("class");
-            String beanName = beanElement.getAttribute("id");
+            Class<?> clazz = Class.forName(beanClazz);
+            String beanName = StringUtils.isEmpty(beanElement.getAttribute("id")) ? StrUtil.lowerFirst(clazz.getSimpleName()) : beanElement.getAttribute("id");
             String initMethod = beanElement.getAttribute("init-method");
             String destroyMethod = beanElement.getAttribute("destroy-method");
             String type = beanElement.getAttribute("scope");
 
             BeanDefinition beanDefinition = new BeanDefinition();
-            beanDefinition.setBeanClass(Class.forName(beanClazz));
+            beanDefinition.setBeanClass(clazz);
             if (StringUtils.isNotEmpty(initMethod)) {
                 beanDefinition.setInitMethod(initMethod);
             }

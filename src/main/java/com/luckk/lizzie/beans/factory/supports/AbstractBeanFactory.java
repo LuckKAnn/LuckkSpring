@@ -5,6 +5,8 @@ import com.luckk.lizzie.beans.factory.FactoryBean;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanPostProcessor;
 import com.luckk.lizzie.beans.factory.factory.ConfigurableBeanFactory;
+import com.luckk.lizzie.util.StringValueResolver;
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
  */
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements BeanDefinitionRegistry, ConfigurableBeanFactory {
     private List<BeanPostProcessor> beanPostProcessorChain = new ArrayList<>();
+
+    private List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
 
     @Override
     public Object getBean(String name) {
@@ -83,5 +87,18 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         this.beanPostProcessorChain.add(beanPostProcessor);
     }
 
+    public void addStringValueResolver(StringValueResolver resolver) {
+        this.embeddedValueResolvers.add(resolver);
+    }
+
+    public String stringResolve(String str) {
+        for (StringValueResolver resolver : embeddedValueResolvers) {
+            String resolveStringValue = resolver.resolveStringValue(str);
+            if (StringUtils.isNotEmpty(resolveStringValue)) {
+                return resolveStringValue;
+            }
+        }
+        return null;
+    }
 
 }

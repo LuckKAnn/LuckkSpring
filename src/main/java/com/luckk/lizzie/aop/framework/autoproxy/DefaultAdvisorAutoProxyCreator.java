@@ -76,6 +76,11 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
         return null;
     }
 
+    @Override
+    public Object postProcessPropertyValues(Object bean, String beanName) {
+        return bean;
+    }
+
     private boolean isInfrastructureClass(Class<?> beanClass) {
         // Advice 切面
         // Pointcut 切点
