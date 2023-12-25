@@ -8,12 +8,15 @@ import com.luckk.lizzie.beans.factory.PropertyValues;
 import com.luckk.lizzie.beans.factory.factory.BeanDefinition;
 import com.luckk.lizzie.beans.factory.factory.BeanReference;
 import com.luckk.lizzie.beans.factory.factory.ConfigurableBeanFactory;
+import com.luckk.lizzie.context.annotation.ClassPathBeanDefinitionScanner;
+import com.luckk.lizzie.context.annotation.ClassPathScanningCandidateComponentProvider;
 import com.luckk.lizzie.core.io.Resource;
 import com.luckk.lizzie.core.io.ResourceLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +33,16 @@ import java.util.List;
  */
 @Slf4j
 public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
+
+
+    /**
+     * 扫描路径
+     */
+    private String baseScanPackage;
+
+
+    private ClassPathBeanDefinitionScanner provider = new ClassPathBeanDefinitionScanner(getRegistry());
+
     public XmlBeanDefinitionReader(BeanDefinitionRegistry beanDefinitionRegistry, ResourceLoader resourceLoader) {
         super(beanDefinitionRegistry, resourceLoader);
     }
@@ -67,6 +80,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
     private void parseAndRegisterBeanDefinition(Document document) throws ClassNotFoundException {
         Element rootElement = XmlUtil.getRootElement(document);
+        parseAndSetScanPackage(rootElement);
         // 所有的bean定义
         List<Element> beans = XmlUtil.getElements(rootElement, "bean");
 
@@ -118,6 +132,16 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         }
     }
 
+    private void parseAndSetScanPackage(Element rootElement) {
+        Element element = XmlUtil.getElement(rootElement, "context:component-scan");
+        if (element == null) {
+            return;
+        }
+        String value = element.getAttribute("base-package");
+        this.baseScanPackage = value;
+        provider.doScan(baseScanPackage);
+    }
+
     @Override
     public void loadBeanDefinitions(Resource... resources) {
 
@@ -134,5 +158,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         for (String location : locations) {
             loadBeanDefinitions(location);
         }
+    }
+
+    public String getBaseScanPackage() {
+        return baseScanPackage;
     }
 }

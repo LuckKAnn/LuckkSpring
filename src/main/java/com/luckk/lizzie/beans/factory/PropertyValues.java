@@ -12,14 +12,17 @@ import java.util.List;
  */
 public class PropertyValues {
 
-    private  List<PropertyValue> propertyValues;
+    private List<PropertyValue> propertyValues;
 
     public PropertyValues() {
         propertyValues = new ArrayList<>();
     }
 
-    public List<PropertyValue> getPropertyValues() {
-        return propertyValues;
+    public PropertyValue[] getPropertyValues() {
+        // return propertyValues;
+        // 这里相当于返回一个副本了
+        // 可以避免潜在的修改BD导致的并发修改一场
+        return this.propertyValues.toArray(new PropertyValue[0]);
     }
 
     public void addPropertyValue(PropertyValue pv) {

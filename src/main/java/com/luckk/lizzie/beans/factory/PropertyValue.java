@@ -9,9 +9,17 @@ package com.luckk.lizzie.beans.factory;
  */
 public class PropertyValue {
 
-     public String propertyName;
+    public String propertyName;
 
-     public Object propertyValue;
+    public Object propertyValue;
+
+    public PropertyValue() {
+    }
+
+    public PropertyValue(String propertyName, Object propertyValue) {
+        this.propertyName = propertyName;
+        this.propertyValue = propertyValue;
+    }
 
     public String getPropertyName() {
         return propertyName;
